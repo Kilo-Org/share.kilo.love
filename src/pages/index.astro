@@ -1,11 +1,10 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Dashboard">
+	<div class="bg-white shadow rounded-lg p-6">
+		<h2 class="text-xl font-semibold text-gray-900 mb-4">Welcome to your Dashboard</h2>
+		<p class="text-gray-600">This is your main content area. The header above includes navigation, notifications, and user profile menu.</p>
+	</div>
 </Layout>
