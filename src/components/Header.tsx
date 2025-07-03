@@ -8,10 +8,9 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'Dashboard', href: '/', current: true },
+  { name: 'Tags', href: '/tags', current: false },
+  { name: 'Submit Project', href: '/submit', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
@@ -28,11 +27,21 @@ export default function Header() {
     <Disclosure as="nav" className="border-b border-gray-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 justify-between">
-          <div className="flex">
-            <div className="flex shrink-0 items-center">
-              <Blocks className="h-6 w-6 text-indigo-600" />
-            </div>
-            <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+          <div className='flex'>
+            <a href='/' className="flex shrink-0 items-center mr-4">
+              <div className="flex gap-2 items-center">
+                <Blocks className="h-6 w-6 text-maroon" />
+                <span>
+                  Share Kilo Love
+                </span>
+                <span
+                  className="inline-flex items-center rounded-md bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700"
+                >
+                  Beta
+                </span>
+              </div>
+            </a>
+            <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8 ">
               {navigation.map((item) => (
                 <a
                   key={item.name}
@@ -40,7 +49,7 @@ export default function Header() {
                   aria-current={item.current ? 'page' : undefined}
                   className={classNames(
                     item.current
-                      ? 'border-indigo-500 text-gray-900'
+                      ? 'border-mauve text-gray-900'
                       : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                     'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium',
                   )}
@@ -50,15 +59,18 @@ export default function Header() {
               ))}
             </div>
           </div>
+          <div className='flex items-center'>
+            search todo
+          </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <button
+            {/* <button
               type="button"
               className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
               <Bell aria-hidden="true" className="size-6" />
-            </button>
+            </button> */}
 
             {/* Profile dropdown */}
             <Menu as="div" className="relative ml-3">

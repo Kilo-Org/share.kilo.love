@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+/* Catppuccin Color Palette */
+@theme {
+  --color-rosewater: #dc8a78;
+  --color-flamingo: #dd7878;
+  --color-pink: #ea76cb;
+  --color-mauve: #8839ef;
+  --color-red: #d20f39;
+  --color-maroon: #e64553;
+  --color-peach: #fe640b;
+  --color-yellow: #df8e1d;
+  --color-green: #40a02b;
+  --color-teal: #179299;
+  --color-sky: #04a5e5;
+  --color-sapphire: #209fb5;
+  --color-blue: #1e66f5;
+  --color-lavender: #7287fd;
+  --color-text: #4c4f69;
+  --color-subtext-1: #5c5f77;
+  --color-subtext-0: #6c6f85;
+  --color-overlay-2: #7c7f93;
+  --color-overlay-1: #8c8fa1;
+  --color-overlay-0: #9ca0b0;
+  --color-surface-2: #acb0be;
+  --color-surface-1: #bcc0cc;
+  --color-surface-0: #ccd0da;
+  --color-base: #eff1f5;
+  --color-mantle: #e6e9ef;
+  --color-crust: #dce0e8;
+}
