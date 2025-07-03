@@ -1,5 +1,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems, Input } from '@headlessui/react'
 import { Menu as MenuIcon, Bell, X, Blocks } from 'lucide-react'
+import { useRef, useEffect } from 'react'
 
 const user = {
   name: 'Tom Cook',
@@ -22,11 +23,39 @@ interface HeaderProps {
 }
 
 export default function Header({ currentPath = '/' }: HeaderProps) {
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  
   const navigation = [
     { name: 'Dashboard', href: '/', current: currentPath === '/' },
     { name: 'Tags', href: '/tags', current: currentPath === '/tags' },
     { name: 'Submit Project', href: '/submit', current: currentPath === '/submit' },
   ]
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check if the "/" key is pressed and no modifier keys are held
+      if (event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        // Don't trigger if user is already typing in an input, textarea, or contenteditable element
+        const activeElement = document.activeElement
+        const isTyping = activeElement && (
+          activeElement.tagName === 'INPUT' ||
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.getAttribute('contenteditable') === 'true'
+        )
+        
+        if (!isTyping && searchInputRef.current) {
+          event.preventDefault() // Prevent the "/" from being typed in the search input
+          searchInputRef.current.focus()
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   return (
     <Disclosure as="nav" className="border-b border-gray-200 bg-white">
@@ -65,7 +94,13 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
             </div>
           </div>
           <div className='flex items-center sm:min-w-64'>
-            <Input name="search" type="text" placeholder="Search for project" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            <Input
+              ref={searchInputRef}
+              name="search"
+              type="text"
+              placeholder="Search for project (/)"
+              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            />
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {/* <button
