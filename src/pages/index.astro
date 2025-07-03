@@ -1,8 +1,10 @@
 ---
+import Hero from '../components/Hero.astro';
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Share Kilo Love">
+<Layout title="Share Kilo Love" showTitle={false}>
+	<Hero />
 	<div class="bg-white shadow rounded-lg p-6">
 		<h2 class="text-xl font-semibold text-gray-900 mb-4">
 			Welcome to your Dashboard

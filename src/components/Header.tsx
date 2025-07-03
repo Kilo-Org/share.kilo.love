@@ -26,7 +26,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
   const searchInputRef = useRef<HTMLInputElement>(null)
   
   const navigation = [
-    { name: 'Dashboard', href: '/', current: currentPath === '/' },
+    { name: 'Projects', href: '/', current: currentPath === '/' },
     { name: 'Tags', href: '/tags', current: currentPath === '/tags' },
     { name: 'Submit Project', href: '/submit', current: currentPath === '/submit' },
   ]
