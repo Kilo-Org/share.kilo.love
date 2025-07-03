@@ -7,6 +7,7 @@ export interface Props {
 }
 
 const { title = "Dashboard" } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -20,7 +21,7 @@ const { title = "Dashboard" } = Astro.props;
 	</head>
 	<body class="h-full">
 		<div class="min-h-full bg-base">
-			<Header client:load />
+			<Header client:load currentPath={currentPath} />
 			
 			<div class="py-10">
 				<header>

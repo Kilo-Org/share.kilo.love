@@ -1,4 +1,4 @@
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems, Input } from '@headlessui/react'
 import { Menu as MenuIcon, Bell, X, Blocks } from 'lucide-react'
 
 const user = {
@@ -7,11 +7,6 @@ const user = {
   imageUrl:
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
-const navigation = [
-  { name: 'Dashboard', href: '/', current: true },
-  { name: 'Tags', href: '/tags', current: false },
-  { name: 'Submit Project', href: '/submit', current: false },
-]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
@@ -22,7 +17,17 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Header() {
+interface HeaderProps {
+  currentPath?: string;
+}
+
+export default function Header({ currentPath = '/' }: HeaderProps) {
+  const navigation = [
+    { name: 'Dashboard', href: '/', current: currentPath === '/' },
+    { name: 'Tags', href: '/tags', current: currentPath === '/tags' },
+    { name: 'Submit Project', href: '/submit', current: currentPath === '/submit' },
+  ]
+
   return (
     <Disclosure as="nav" className="border-b border-gray-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -59,8 +64,8 @@ export default function Header() {
               ))}
             </div>
           </div>
-          <div className='flex items-center'>
-            search todo
+          <div className='flex items-center sm:min-w-64'>
+            <Input name="search" type="text" placeholder="Search for project" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {/* <button
