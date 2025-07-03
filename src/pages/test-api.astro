@@ -1,0 +1,122 @@
+---
+// Test page to demonstrate the GitHub discussions API
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>GitHub Discussions API Test</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        line-height: 1.6;
+      }
+      .discussion {
+        border: 1px solid #e1e5e9;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: #f8f9fa;
+      }
+      .discussion h3 {
+        margin-top: 0;
+        color: #0969da;
+      }
+      .discussion-meta {
+        color: #656d76;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+      }
+      .discussion-body {
+        margin-bottom: 1rem;
+      }
+      .discussion-stats {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.875rem;
+        color: #656d76;
+      }
+      .error {
+        background: #ffeaea;
+        border: 1px solid #ff6b6b;
+        color: #d63031;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #656d76;
+      }
+      button {
+        background: #0969da;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 1rem;
+      }
+      button:hover {
+        background: #0550ae;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GitHub Discussions API Test</h1>
+    <p>This page demonstrates fetching discussions from the "built-with-kilo" category.</p>
+    
+    <button id="loadDiscussions">Load Discussions</button>
+    
+    <div id="content">
+      <p class="loading">Click "Load Discussions" to fetch data from the API.</p>
+    </div>
+
+    <script>
+      document.getElementById('loadDiscussions').addEventListener('click', async () => {
+        const contentDiv = document.getElementById('content');
+        contentDiv.innerHTML = '<p class="loading">Loading discussions...</p>';
+        
+        try {
+          const response = await fetch('/api/discussions?limit=5');
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || 'Failed to fetch discussions');
+          }
+          
+          if (data.discussions && data.discussions.length > 0) {
+            contentDiv.innerHTML = data.discussions.map(discussion => `
+              <div class="discussion">
+                <h3><a href="${discussion.url}" target="_blank">${discussion.title}</a></h3>
+                <div class="discussion-meta">
+                  By <strong>${discussion.author.login}</strong> • 
+                  Created: ${new Date(discussion.createdAt).toLocaleDateString()} • 
+                  Category: ${discussion.category.name}
+                </div>
+                <div class="discussion-body">
+                  ${discussion.body.substring(0, 300)}${discussion.body.length > 300 ? '...' : ''}
+                </div>
+                <div class="discussion-stats">
+                  <span>💬 ${discussion.comments.totalCount} comments</span>
+                  <span>👍 ${discussion.reactions.totalCount} reactions</span>
+                </div>
+              </div>
+            `).join('');
+          } else {
+            contentDiv.innerHTML = '<p>No discussions found in the "built-with-kilo" category.</p>';
+          }
+        } catch (error) {
+          contentDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+        }
+      });
+    </script>
+  </body>
+</html>

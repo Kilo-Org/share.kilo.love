@@ -1,5 +1,5 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Menu as MenuIcon, Bell, X, Blocks } from 'lucide-react'
 
 const user = {
   name: 'Tom Cook',
@@ -30,7 +30,7 @@ export default function Header() {
         <div className="flex h-16 justify-between">
           <div className="flex">
             <div className="flex shrink-0 items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-blocks-icon lucide-blocks"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2"/><rect x="14" y="2" width="8" height="8" rx="1"/></svg>
+              <Blocks className="h-6 w-6 text-indigo-600" />
             </div>
             <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
               {navigation.map((item) => (
@@ -57,7 +57,7 @@ export default function Header() {
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6" />
+              <Bell aria-hidden="true" className="size-6" />
             </button>
 
             {/* Profile dropdown */}
@@ -91,8 +91,8 @@ export default function Header() {
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
               <span className="absolute -inset-0.5" />
               <span className="sr-only">Open main menu</span>
-              <Bars3Icon aria-hidden="true" className="block size-6 group-data-[open]:hidden" />
-              <XMarkIcon aria-hidden="true" className="hidden size-6 group-data-[open]:block" />
+              <MenuIcon aria-hidden="true" className="block size-6 group-data-[open]:hidden" />
+              <X aria-hidden="true" className="hidden size-6 group-data-[open]:block" />
             </DisclosureButton>
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function Header() {
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6" />
+              <Bell aria-hidden="true" className="size-6" />
             </button>
           </div>
           <div className="mt-3 space-y-1">
