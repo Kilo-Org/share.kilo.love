@@ -93,7 +93,8 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
               ))}
             </div>
           </div>
-          <div className='flex items-center sm:min-w-64'>
+          {/* TODO: Add search and GitHub login */}
+          {/* <div className='flex items-center sm:min-w-64'>
             <Input
               ref={searchInputRef}
               name="search"
@@ -101,7 +102,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
               placeholder="Search for project (/)"
               className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
-          </div>
+          </div> */}
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {/* <button
               type="button"
@@ -113,7 +114,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
             </button> */}
 
             {/* Profile dropdown */}
-            <Menu as="div" className="relative ml-3">
+            {/* <Menu as="div" className="relative ml-3">
               <div>
                 <MenuButton className="relative flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2">
                   <span className="absolute -inset-1.5" />
@@ -136,7 +137,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                   </MenuItem>
                 ))}
               </MenuItems>
-            </Menu>
+            </Menu> */}
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
             {/* Mobile menu button */}
