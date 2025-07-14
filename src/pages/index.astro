@@ -1,21 +1,93 @@
 ---
 import Hero from '../components/Hero.astro';
 import Layout from '../layouts/Layout.astro';
+import DiscussionCards from '../components/DiscussionCards.astro';
+import { TriangleAlert } from '@lucide/astro';
+
+// Fetch the 4 most recent discussions from our API
+let discussions = [];
+let error = null;
+
+try {
+  const response = await fetch(`${Astro.url.origin}/api/discussions?limit=3`);
+  const data = await response.json();
+  
+  if (response.ok) {
+    discussions = data.discussions || [];
+  } else {
+    error = data.error || 'Failed to fetch discussions';
+  }
+} catch (e) {
+  error = 'Failed to connect to API';
+  console.error('Error fetching discussions:', e);
+}
 ---
 
 <Layout title="Share Kilo Love" showTitle={false}>
 	<Hero />
-	<div class="bg-white shadow rounded-lg p-6">
-		<h2 class="text-xl font-semibold text-gray-900 mb-4">
-			Welcome to your Dashboard
-		</h2>
-		<p class="text-gray-600">
-			This is your main content area. The header above includes navigation, notifications, and user profile menu.
-		</p>
-		<span
-        class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
-    >
-        Badge
-    </span>
+	
+	<div class="py-6 sm:py-32">
+		<div class="mx-auto max-w-7xl px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl lg:mx-0">
+				<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+					Recent Projects
+				</h2>
+				<p class="mt-2 text-lg leading-8 text-gray-600">
+					Discover the latest projects built with Kilo Code, shared by our amazing community.
+				</p>
+			</div>
+			
+			{error ? (
+				<div class="mx-auto mt-16 max-w-2xl">
+					<div class="rounded-md bg-yellow-50 p-4">
+						<div class="flex items-center justify-center">
+							<div class="flex-shrink-0">
+								<TriangleAlert class="text-yellow-800" />
+							</div>
+							<div class="ml-3">
+								<h3 class="text-sm font-medium text-yellow-800">
+									Unable to load recent projects. If this error persists please contact hi@kilocode.ai
+								</h3>
+								<div class="mt-2 text-sm text-yellow-700">
+									<p>{error}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			) : discussions.length > 0 ? (
+				<>
+					<DiscussionCards discussions={discussions} />
+					
+					<!-- View More Button -->
+					<div class="mt-16 flex justify-center">
+						<a
+							href="/projects"
+							class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						>
+							View All Projects
+						</a>
+					</div>
+				</>
+			) : (
+				<div class="mx-auto mt-16 text-center">
+					<div class="mx-auto flex size-12 items-center justify-center rounded-full bg-gray-100">
+						<svg class="size-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+						</svg>
+					</div>
+					<h3 class="mt-2 text-sm font-semibold text-gray-900">No discussions found</h3>
+					<p class="mt-1 text-sm text-gray-500">Check back later for community projects.</p>
+					<div class="mt-6">
+						<a
+							href="/projects"
+							class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						>
+							Browse All Projects
+						</a>
+					</div>
+				</div>
+			)}
+		</div>
 	</div>
 </Layout>

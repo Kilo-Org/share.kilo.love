@@ -2,6 +2,32 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Submit">
-    <h1>Submit</h1>
+<Layout title="Submit a Project">
+    <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+        <div style="background: #f8f9fa; padding: 2rem; border-radius: 8px; margin: 2rem 0;">
+            <h2 style="margin-top: 0; color: #0366d6;">🚧 We're Building Something Better</h2>
+            <p>We're currently developing a built-in submission form with GitHub authentication to make project submissions even easier.</p>
+        </div>
+
+        <h2 class="text-2xl">Submit Now via GitHub Discussions</h2>
+        <p>In the meantime, you can submit your project directly through our GitHub Discussions:</p>
+        
+        <div style="background: #e6f3ff; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #0366d6; margin: 1.5rem 0;">
+            <p style="margin: 0;"><strong>👉 <a href="https://github.com/Kilo-Org/kilocode/discussions/categories/built-with-kilo" target="_blank" rel="noopener noreferrer" style="color: #0366d6; text-decoration: none;">Submit your project in the "Built with Kilo" category</a></strong></p>
+        </div>
+
+        <h3>What to Include in your Submission</h3>
+        <ul style="line-height: 1.6;">
+            <li><strong>Project Name:</strong> A clear, descriptive title</li>
+            <li><strong>Screenshots:</strong> Visual examples of your project</li>
+            <li><strong>Description:</strong> What your project does and why it's useful</li>
+            <li><strong>Repository URL:</strong> Link to your GitHub repository</li>
+            <li><strong>Live Demo:</strong> If available, include a link to see it in action</li>
+            <li><strong>Technologies Used:</strong> Programming languages, frameworks, tools</li>
+        </ul>
+
+        <p style="color: #666; font-style: italic; margin-top: 2rem;">
+            Once you submit via GitHub Discussions, our team will review and feature your project on the site!
+        </p>
+    </div>
 </Layout>
