@@ -26,6 +26,7 @@ const DISCUSSIONS_QUERY = `
       discussions(first: $first, after: $after, categoryId: $categoryId, orderBy: {field: CREATED_AT, direction: DESC}) {
         nodes {
           id
+          number
           title
           body
           bodyHTML
@@ -52,6 +53,13 @@ const DISCUSSIONS_QUERY = `
           reactions {
             totalCount
           }
+          reactionGroups {
+            content
+            users {
+              totalCount
+            }
+          }
+          upvoteCount
           comments {
             totalCount
           }

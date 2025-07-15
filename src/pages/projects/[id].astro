@@ -12,7 +12,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     
     if (response.ok && data.discussions) {
       return data.discussions.map((discussion: GitHubDiscussion) => ({
-        params: { id: discussion.id },
+        params: { id: discussion.number.toString() },
         props: { discussion }
       }));
     }
@@ -38,7 +38,7 @@ if (!discussion) {
   
   if (id) {
     try {
-      const response = await fetch(`${Astro.url.origin}/api/discussions/${id}`);
+      const response = await fetch(`${Astro.url.origin}/api/discussions/number/${id}`);
       const data = await response.json();
       
       if (response.ok && data.discussion) {
@@ -181,7 +181,7 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558-.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-.971a6.043 6.043 0 01-4.276-5.816A6.052 6.052 0 016.633 10.5z" />
                 </svg>
-                <span>{discussion.reactions.totalCount} reactions</span>
+                <span>{discussion.upvoteCount || 0} upvotes</span>
               </div>
             </div>
 

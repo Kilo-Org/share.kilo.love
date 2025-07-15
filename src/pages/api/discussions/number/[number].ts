@@ -1,14 +1,14 @@
 import type { APIRoute } from 'astro';
-import type { GitHubDiscussion } from '../../../types/github';
+import type { GitHubDiscussion } from '../../../../types/github';
 
 const GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql';
 const REPO_OWNER = 'Kilo-Org';
 const REPO_NAME = 'kilocode';
 
-const DISCUSSION_BY_ID_QUERY = `
-  query GetDiscussionById($id: ID!) {
-    node(id: $id) {
-      ... on Discussion {
+const DISCUSSION_BY_NUMBER_QUERY = `
+  query GetDiscussionByNumber($owner: String!, $name: String!, $number: Int!) {
+    repository(owner: $owner, name: $name) {
+      discussion(number: $number) {
         id
         number
         title
@@ -43,7 +43,6 @@ const DISCUSSION_BY_ID_QUERY = `
             totalCount
           }
         }
-        upvoteCount
         comments {
           totalCount
         }
@@ -54,12 +53,25 @@ const DISCUSSION_BY_ID_QUERY = `
 
 export const GET: APIRoute = async ({ params }) => {
   try {
-    const { id } = params;
+    const { number } = params;
     
-    if (!id) {
+    if (!number) {
       return new Response(
         JSON.stringify({
-          error: 'Discussion ID is required'
+          error: 'Discussion number is required'
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    const discussionNumber = parseInt(number, 10);
+    if (isNaN(discussionNumber)) {
+      return new Response(
+        JSON.stringify({
+          error: 'Discussion number must be a valid integer'
         }),
         {
           status: 400,
@@ -82,7 +94,7 @@ export const GET: APIRoute = async ({ params }) => {
       );
     }
 
-    // Fetch the specific discussion by ID
+    // Fetch the specific discussion by number
     const discussionResponse = await fetch(GITHUB_GRAPHQL_URL, {
       method: 'POST',
       headers: {
@@ -91,9 +103,11 @@ export const GET: APIRoute = async ({ params }) => {
         'User-Agent': 'share-kilo-love-api'
       },
       body: JSON.stringify({
-        query: DISCUSSION_BY_ID_QUERY,
+        query: DISCUSSION_BY_NUMBER_QUERY,
         variables: {
-          id
+          owner: REPO_OWNER,
+          name: REPO_NAME,
+          number: discussionNumber
         }
       })
     });
@@ -119,13 +133,13 @@ export const GET: APIRoute = async ({ params }) => {
       );
     }
 
-    const discussion = discussionData.data?.node;
+    const discussion = discussionData.data?.repository?.discussion;
     
     if (!discussion) {
       return new Response(
         JSON.stringify({
           error: 'Discussion not found',
-          message: `No discussion found with ID: ${id}`
+          message: `No discussion found with number: ${number}`
         }),
         {
           status: 404,

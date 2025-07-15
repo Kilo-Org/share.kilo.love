@@ -1,5 +1,6 @@
 export interface GitHubDiscussion {
   id: string;
+  number: number;
   title: string;
   body: string;
   bodyHTML: string;
@@ -26,6 +27,13 @@ export interface GitHubDiscussion {
   reactions: {
     totalCount: number;
   };
+  reactionGroups: Array<{
+    content: string;
+    users: {
+      totalCount: number;
+    };
+  }>;
+  upvoteCount: number;
   comments: {
     totalCount: number;
   };
