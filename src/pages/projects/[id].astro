@@ -1,26 +1,28 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import type { GetStaticPaths } from 'astro';
+import Layout from "../../layouts/Layout.astro";
+import type { GetStaticPaths } from "astro";
 
-import type { GitHubDiscussion } from '../../types/github';
+import type { GitHubDiscussion } from "../../types/github";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
     // Fetch all discussions to generate static paths
-    const response = await fetch(`${import.meta.env.SITE || 'http://localhost:4321'}/api/discussions?limit=100`);
+    const response = await fetch(
+      `${import.meta.env.SITE || "http://localhost:4321"}/api/discussions?limit=100`
+    );
     const data = await response.json();
-    
+
     if (response.ok && data.discussions) {
       return data.discussions.map((discussion: GitHubDiscussion) => ({
         params: { id: discussion.number.toString() },
-        props: { discussion }
+        props: { discussion },
       }));
     }
-    
-    console.error('Failed to fetch discussions for static paths:', data.error);
+
+    console.error("Failed to fetch discussions for static paths:", data.error);
     return [];
   } catch (error) {
-    console.error('Error generating static paths:', error);
+    console.error("Error generating static paths:", error);
     return [];
   }
 };
@@ -35,38 +37,40 @@ let { discussion }: Props = Astro.props;
 // If not available in props, fetch it dynamically (fallback for new discussions)
 if (!discussion) {
   const { id } = Astro.params;
-  
+
   if (id) {
     try {
-      const response = await fetch(`${Astro.url.origin}/api/discussions/number/${id}`);
+      const response = await fetch(
+        `${Astro.url.origin}/api/discussions/number/${id}`
+      );
       const data = await response.json();
-      
+
       if (response.ok && data.discussion) {
         discussion = data.discussion;
       } else {
         // Discussion not found, redirect to 404
-        return Astro.redirect('/404');
+        return Astro.redirect("/404");
       }
     } catch (error) {
-      console.error('Error fetching discussion:', error);
-      return Astro.redirect('/404');
+      console.error("Error fetching discussion:", error);
+      return Astro.redirect("/404");
     }
   } else {
-    return Astro.redirect('/404');
+    return Astro.redirect("/404");
   }
 }
 
 // At this point, discussion should be defined
 if (!discussion) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 
 // Format date for display
 const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 };
 
@@ -81,20 +85,34 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
 
 <Layout title={`${discussion.title} - Kilo Code Project`} showTitle={false}>
   <main>
-    <div class="bg-white">
+    <a
+      href="/projects"
+      class="text-sm font-semibold text-gray-900 hover:text-gray-700 transition-colors"
+    >
+      <span aria-hidden="true">⬅️</span> Back to Projects 
+    </a>
+    <div class="bg-white my-4">
       <!-- Header Section -->
-      <div class="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20 pt-14">
+      <div
+        class="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20"
+      >
         <div class="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-8">
-          <div class="mx-auto max-w-4xl">
+          <div class="mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-5 lg:gap-12 items-center">
-              <div class="lg:col-span-3">
-                <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+              <div class="lg:col-span-5">
+                <h1
+                  class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
+                >
                   {discussion.title}
                 </h1>
                 <p class="mt-6 text-lg leading-relaxed text-gray-600 max-w-2xl">
-                  A community project shared on GitHub Discussions by {discussion.author.login}
+                  A community project shared on GitHub Discussions by {
+                    discussion.author.login
+                  }
                 </p>
-                <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div
+                  class="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+                >
                   <a
                     href={discussion.url}
                     target="_blank"
@@ -103,24 +121,26 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
                   >
                     View on GitHub
                   </a>
-                  <a href="/projects" class="text-sm font-semibold text-gray-900 hover:text-gray-700 transition-colors">
-                    Back to Projects <span aria-hidden="true">→</span>
-                  </a>
                 </div>
               </div>
-              {firstImage && (
-                <div class="lg:col-span-2 mt-8 lg:mt-0">
-                  <img
-                    src={firstImage}
-                    alt={`Preview of ${discussion.title}`}
-                    class="w-full aspect-[4/3] rounded-xl object-cover shadow-lg"
-                  />
-                </div>
-              )}
+              {
+                firstImage && (
+                  <div class="lg:col-span-2 mt-8 lg:mt-0">
+                    <img
+                      src={firstImage}
+                      alt={`Preview of ${discussion.title}`}
+                      class="w-full aspect-[4/3] rounded-xl object-cover shadow-lg"
+                    />
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>
-        <div class="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32"></div>
+        <div
+          class="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32"
+        >
+        </div>
       </div>
 
       <!-- Project Details -->
@@ -132,19 +152,26 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
               <time datetime={discussion.createdAt} class="text-gray-600">
                 Created {formatDate(discussion.createdAt)}
               </time>
-              {discussion.updatedAt !== discussion.createdAt && (
-                <>
-                  <span class="text-gray-400">•</span>
-                  <time datetime={discussion.updatedAt} class="text-gray-600">
-                    Updated {formatDate(discussion.updatedAt)}
-                  </time>
-                </>
-              )}
+              {
+                discussion.updatedAt !== discussion.createdAt && (
+                  <>
+                    <span class="text-gray-400">•</span>
+                    <time datetime={discussion.updatedAt} class="text-gray-600">
+                      Updated {formatDate(discussion.updatedAt)}
+                    </time>
+                  </>
+                )
+              }
             </div>
 
             <!-- Author Info -->
             <div class="mt-6 flex items-center gap-x-4">
-              <a href={discussion.author.url} target="_blank" rel="noopener noreferrer" class="flex-shrink-0">
+              <a
+                href={discussion.author.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex-shrink-0"
+              >
                 <img
                   src={discussion.author.avatarUrl}
                   alt={discussion.author.login}
@@ -153,7 +180,12 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
               </a>
               <div>
                 <p class="text-sm font-medium text-gray-900">
-                  <a href={discussion.author.url} target="_blank" rel="noopener noreferrer" class="hover:underline">
+                  <a
+                    href={discussion.author.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:underline"
+                  >
                     {discussion.author.login}
                   </a>
                 </p>
@@ -162,33 +194,55 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
             </div>
 
             <!-- Labels -->
-            {discussion.labels.nodes.length > 0 && (
-              <div class="mt-8">
-                <h3 class="text-sm font-semibold text-gray-900 mb-3">Tags</h3>
-                <div class="flex flex-wrap gap-2">
-                  {discussion.labels.nodes.map((label) => (
-                    <span
-                      class="inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium ring-1 ring-inset"
-                      style={`background-color: #${label.color}20; color: #${label.color}; border-color: #${label.color}40;`}
-                    >
-                      {label.name}
-                    </span>
-                  ))}
+            {
+              discussion.labels.nodes.length > 0 && (
+                <div class="mt-8">
+                  <h3 class="text-sm font-semibold text-gray-900 mb-3">Tags</h3>
+                  <div class="flex flex-wrap gap-2">
+                    {discussion.labels.nodes.map((label) => (
+                      <span
+                        class="inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium ring-1 ring-inset"
+                        style={`background-color: #${label.color}20; color: #${label.color}; border-color: #${label.color}40;`}
+                      >
+                        {label.name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )
+            }
 
             <!-- Engagement Stats -->
             <div class="mt-8 flex items-center gap-x-6 text-sm text-gray-600">
               <div class="flex items-center gap-x-1.5">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+                  ></path>
                 </svg>
                 <span>{discussion.comments.totalCount} comments</span>
               </div>
               <div class="flex items-center gap-x-1.5">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558-.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-.971a6.043 6.043 0 01-4.276-5.816A6.052 6.052 0 016.633 10.5z" />
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558-.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-.971a6.043 6.043 0 01-4.276-5.816A6.052 6.052 0 016.633 10.5z"
+                  ></path>
                 </svg>
                 <span>{discussion.upvoteCount || 0} upvotes</span>
               </div>
@@ -196,7 +250,9 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
 
             <!-- Project Description -->
             <div class="mt-12">
-              <h2 class="text-2xl font-bold text-gray-900 mb-6">Project Description</h2>
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                Project Description
+              </h2>
               <div class="prose prose-lg prose-gray max-w-none">
                 <div class="markdown-content" set:html={discussion.bodyHTML} />
               </div>
@@ -205,9 +261,13 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
             <!-- GitHub Discussion Link -->
             <div class="mt-12">
               <div class="rounded-lg bg-gray-50 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Continue the conversation</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                  Continue the conversation
+                </h3>
                 <p class="text-gray-600 mb-4">
-                  This project was originally shared as a GitHub Discussion. Join the conversation, ask questions, or share your own implementation.
+                  This project was originally shared as a GitHub Discussion.
+                  Join the conversation, ask questions, or share your own
+                  implementation.
                 </p>
                 <a
                   href={discussion.url}
@@ -216,8 +276,18 @@ const firstImage = extractFirstImage(discussion.bodyHTML);
                   class="inline-flex items-center rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
                 >
                   View Discussion on GitHub
-                  <svg class="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  <svg
+                    class="ml-2 h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                    ></path>
                   </svg>
                 </a>
               </div>
